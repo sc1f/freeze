@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        div.container {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 0 5px 2.5px 5px;
+            width: 100px;
+        }
+
+        span#description {
+            margin-bottom: 10px;
+        }
+
+        button#freeze-button {
+            border: none;
+            border-radius: 3px;
+            background: #3f7edd;
+            color: white;
+            height: 25px;
+            width: 80px;
+            -webkit-transition: background 0.5s;
+            transition: background 0.5.s;
+        }
+
+        button#freeze-button:hover {
+            background: #2f60aa;
+        }
+
+        button.frozen {
+            background: #2f60aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span id="description">Click the button to pause/unpause all mouse and keyboard events on the current tab.</span>
+        <button id="freeze-button">Freeze</button>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

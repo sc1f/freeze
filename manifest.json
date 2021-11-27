@@ -1,0 +1,13 @@
+{
+    "name": "freeze",
+    "description": "Freezes mouse and keyboard interactions from triggering on the current page.",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions": ["storage", "scripting", "activeTab"],
+    "action": {
+        "default_popup": "popup.html"
+    }
+}
