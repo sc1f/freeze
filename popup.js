@@ -1,6 +1,7 @@
 const button = document.getElementById("freeze-button");
 
-const toggleFreeze = () => {
+const toggleFreeze = tab_id => {
+    console.log("toggling");
     const OVERLAY_ID = "__freeze_overlay__";
 
     const freeze = () => {
@@ -38,32 +39,38 @@ const toggleFreeze = () => {
     const is_frozen = overlay !== null;
     is_frozen ? unfreeze() : freeze();
 
-    console.log("is_frozen", !is_frozen);
-    chrome.storage.local.set({
-        is_frozen: !is_frozen,
-    });
+    const to_store = {};
+    to_store[`${tab_id}_is_frozen`] = !is_frozen;
+    console.log(to_store);
+    chrome.storage.local.set(to_store);
 };
 
-const toggleButtonText = () => {
-    chrome.storage.local.get("is_frozen", (result) => {
-        result.is_frozen === true
-            ? (button.innerText = "Unfreeze")
-            : (button.innerText = "Freeze");
-        button.classList.toggle("frozen");
+window.addEventListener("load", async () => {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    const toggleButtonText = () => {
+        const key = `${tab.id}_is_frozen`;
+        chrome.storage.local.get(key, (result) => {
+            result[key] === true
+                ? (button.innerText = "Unfreeze")
+                : (button.innerText = "Freeze");
+            button.classList.toggle("frozen");
+        });
+    };
+
+    console.log("ran")
+
+    button.addEventListener("click", async () => {
+        console.log("inside el");
+        chrome.scripting.executeScript(
+            {
+                target: { tabId: tab.id },
+                function: toggleFreeze,
+                args: [tab.id],
+            },
+            toggleButtonText
+        );
     });
-}
 
-button.addEventListener("click", async () => {
-    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-    chrome.scripting.executeScript(
-        {
-            target: { tabId: tab.id },
-            function: toggleFreeze,
-        }, toggleButtonText
-    );
-});
-
-(function () {
     toggleButtonText();
-}());
+});
